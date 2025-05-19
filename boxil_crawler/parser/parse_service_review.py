@@ -39,9 +39,9 @@ def parse_service_review(
         data.review_bad_point_count = len( data.review_bad_point)
         yield DataEvent("review", data) 
         
-    print(data)    
+        
      
-    yield DataEvent("review", data)   
+ 
     
     yield CrawlEvent(
         request=Request(next_page),
