@@ -112,22 +112,24 @@ def parse_service_detail(
     data.service_img_url = response.xpath('//*[contains(@class, "ServiceMediaContents")]//div/img/@src').getall()
     data.service_company_logo_img = response.xpath('//*[contains(@class, "Organization_logo")]/img/@src').get()
     data.service_company_name = response.xpath("//*[contains(@class, 'Organization_name')]/text()").get()
-    data.service_company_caption = response.xpath("//*[contains(@class, 'Organization_caption')]/text()").getall()
-    data.service_company_industry = response.xpath("//*[contains(@class, 'Organization_caption')]/text()").get()
-    data.service_company_address = data.service_company_caption[2] + data.service_company_caption[1]
+    data.service_company_industry = response.xpath("//*[contains(@class, 'Organization_caption')][1]/text()").get()
+    data.service_company_address = "".join(response.xpath("//*[contains(@class, 'Organization_caption')][2]/text()").getall())
     
-    if len(data.service_company_industry) == 3:
-        data.service_company_large_industry = data.service_company_industry.split("/")[0]
-        data.service_company_medium_industry = data.service_company_industry.split("/")[1]
-        data.service_company_small_industry = data.service_company_industry.split("/")[2]
-    if len(data.service_company_industry) == 2:
-        data.service_company_large_industry = data.service_company_industry.split("/")[0]
-        data.service_company_medium_industry = data.service_company_industry.split("/")[1]
-        data.service_company_small_industry = None
-    if len(data.service_company_industry) == 1:
-        data.service_company_large_industry = data.service_company_industry.split("/")[0]
-        data.service_company_medium_industry = None
-        data.service_company_small_industry = None
+    if data.service_company_industry:
+        service_company_industry = data.service_company_industry.split("/")
+
+        if len(service_company_industry) == 3:
+            data.service_company_large_industry = data.service_company_industry.split("/")[0]
+            data.service_company_medium_industry = data.service_company_industry.split("/")[1]
+            data.service_company_small_industry = data.service_company_industry.split("/")[2]
+        if len(service_company_industry) == 2:
+            data.service_company_large_industry = data.service_company_industry.split("/")[0]
+            data.service_company_medium_industry = data.service_company_industry.split("/")[1]
+            data.service_company_small_industry = None
+        if len(service_company_industry) == 1:
+            data.service_company_large_industry = data.service_company_industry.split("/")[0]
+            data.service_company_medium_industry = None
+            data.service_company_small_industry = None
          
     data_table = response.xpath('//*[contains(@class, "SpecificationParent_table")]/tbody')
     

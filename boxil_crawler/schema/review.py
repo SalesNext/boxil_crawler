@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 
 class Review(BaseModel):
-    review_service_id: Optional[str] = None
+    review_id: Optional[str] = None
     reviewer_name: Optional[str] = None
     reviewer_role: Optional[str] = None
     reviewer_type_of_business: Optional[str] = None
@@ -19,3 +19,4 @@ class Review(BaseModel):
     review_good_point_count: Optional[int] = None
     review_bad_point: Optional[List[str]] = None
     review_bad_point_count: Optional[int] = None
+    service_review_id: Optional[str] = None

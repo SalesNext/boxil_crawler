@@ -25,7 +25,6 @@ class Service(BaseModel):
     service_img_url: Optional[List[str]] = None
     service_company_logo_img: Optional[str] = None
     service_company_name: Optional[str] = None
-    service_company_caption: Optional[List[str]] = None
     service_company_industry: Optional[str] = None
     service_company_address: Optional[str] = None
     service_company_large_industry: Optional[str] = None
