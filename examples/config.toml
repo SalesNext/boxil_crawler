@@ -1,0 +1,66 @@
+[engine]
+type = "scrapy"
+
+[engine.settings]
+LOG_LEVEL = 'INFO'
+CONCURRENT_REQUESTS = 4
+DOWNLOAD_DELAY = 0.1
+PROXIES = [
+    
+    'http://mobi3:Infi2132@api.yourproxy.click:5103'
+]
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+
+[engine.settings.DOWNLOADER_MIDDLEWARES]
+'salesnext_crawler.engines.scrapy.middleware.RandomizedProxyMiddleware' = 740
+
+[engine.settings.DOWNLOAD_HANDLERS]
+http = 'salesnext_crawler.engines.scrapy.downloader.curl_impersonate.CurlImpersonateDownloadHandler'
+https = 'salesnext_crawler.engines.scrapy.downloader.curl_impersonate.CurlImpersonateDownloadHandler'
+
+[filesystems]
+
+[filesystems.local]
+type = 'LocalFileSystem'
+
+  
+[storages]
+
+[storages.service]
+type = 'pyarrow'
+format = 'parquet'
+filesystem = 'local'
+key = 'service_id'
+path = 'data/{crawler_id}/service/{chunk}.parquet'
+chunk_size = 1000
+
+[storages.review]
+type = 'pyarrow'
+format = 'parquet'
+filesystem = 'local'
+key = 'review_id'
+path = 'data/{crawler_id}/review/{chunk}.parquet'
+chunk_size = 1000
+
+[readers]
+
+[readers.phone_table]
+type = 'pyarrow'
+format = 'csv'
+filesystem = 'local'
+path = 'phone_table/*.csv'
+
+[readers.master_company_table]
+type = 'pyarrow'
+format = 'csv'
+filesystem = 'local'
+path = 'master_company_table/*.csv'
+
+[readers.master_phone_table]
+type = 'pyarrow'
+format = 'csv'
+filesystem = 'local'
+path = 'master_phone_table/*.csv'
+
+[crawler]
+classname = 'boxil_crawler.boxil_crawler.BoxilCrawler'
