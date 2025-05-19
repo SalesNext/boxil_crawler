@@ -13,7 +13,6 @@ class Review(BaseModel):
     reviewer_status_tags: Optional[List[str]] = None
     review_title: Optional[str] = None
     review_url: Optional[str] = None
-    review_id: Optional[str] = None
     review_description: Optional[str] = None
     review_content: Optional[str] = None
     review_good_point: Optional[List[str]] = None
