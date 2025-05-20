@@ -35,10 +35,4 @@ def parse_service_list(
             metadata=None,
             callback=parse_service_detail,
         )
-    # for url in review:
-    #     yield CrawlEvent(
-    #         request=Request(urljoin(url)),
-    #         metadata=None,
-    #         callback=parse_service_review,
-    #     )
-  
+    
