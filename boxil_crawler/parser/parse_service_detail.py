@@ -8,6 +8,7 @@ from boxil_crawler.schema.service import Service
 from salesnext_crawler.events import CrawlEvent, DataEvent, Event
 from scrapy.http.response.html import HtmlResponse
 from scrapy import Request
+from boxil_crawler.parser.parse_service_review import parse_service_review
 import re
 
 DATA_TABLE = {
@@ -156,4 +157,10 @@ def parse_service_detail(
             "data": data,
         },
         callback = parse_service_rating,
+    )
+    
+    yield CrawlEvent(
+        request = Request(f"https://boxil.jp/service/{data.service_id}/reviews"),
+        metadata= None,
+        callback = parse_service_review,
     )

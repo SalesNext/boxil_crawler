@@ -6,13 +6,11 @@ LOG_LEVEL = 'INFO'
 CONCURRENT_REQUESTS = 4
 DOWNLOAD_DELAY = 0.1
 PROXIES = [
-    
-    'http://mobi3:Infi2132@api.yourproxy.click:5103'
+
 ]
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
 
 [engine.settings.DOWNLOADER_MIDDLEWARES]
-'salesnext_crawler.engines.scrapy.middleware.RandomizedProxyMiddleware' = 740
 
 [engine.settings.DOWNLOAD_HANDLERS]
 http = 'salesnext_crawler.engines.scrapy.downloader.curl_impersonate.CurlImpersonateDownloadHandler'

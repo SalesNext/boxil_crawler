@@ -14,8 +14,7 @@ def parse_service_review(
 ) -> Iterable[Event]:
     
     next_page = response.xpath("//a[@title='next_page']/@href").get()
-    next_page = urljoin(response.url, next_page)
-    
+
     reviews = response.xpath("//div[@class='reputationAnswerItemWrap']")
     for review in reviews:
         data = Review()
@@ -39,12 +38,11 @@ def parse_service_review(
         data.review_bad_point_count = len( data.review_bad_point)
         yield DataEvent("review", data) 
         
-        
-     
- 
-    
-    yield CrawlEvent(
-        request=Request(next_page),
-        metadata=None,
-        callback=parse_service_review,
-    )
+
+    if next_page:
+        next_page = urljoin(response.url, next_page)
+        yield CrawlEvent(
+            request=Request(next_page),
+            metadata=None,
+            callback=parse_service_review,
+        )

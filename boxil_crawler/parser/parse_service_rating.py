@@ -60,10 +60,5 @@ def parse_service_rating(
     yield DataEvent("service", data)
    
     
-    yield CrawlEvent(
-        request = Request(response.url),
-        metadata = {"id": data.service_id},
-        callback = parse_service_review,
-        
-    )
+   
                     
