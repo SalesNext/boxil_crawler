@@ -1,0 +1,40 @@
+[project]
+name = "boxil_crawler"
+version = "0.1.0"
+description = "boxil_crawler"
+authors = [
+  { name = "Theinfitech", email = "contact@theinfitech.com" }
+]
+
+requires-python = ">=3.9.16"
+
+[tool.uv]
+dev-dependencies = [
+  "pre-commit==2.21.0",
+  "black==22.12.0",
+  "mypy==1.1.1",
+]
+
+[tool.uv.sources]
+salesnext-crawler = { git = "ssh://git@github.com/SalesNext/salesnext-crawler.git", branch = "event" }
+
+[tool.black]
+line-length = 120
+
+[tool.ruff]
+select = [
+  "E", "W", "F", "I", "C90", "UP", "N", "C4", "PLC", "PLE", "PLR", "PLW"
+]
+ignore = ["N812", "N817", "C901", "UP007", "PLR0912", "PLR0915"]
+target-version = "py39"
+line-length = 120
+fix = true
+
+[tool.mypy]
+strict = true
+
+[tool.mypy.scrapy]
+ignore_missing_imports = true
+
+[tool.mypy.pyarrow]
+ignore_missing_imports = true
