@@ -10,6 +10,8 @@ from scrapy.http.response.html import HtmlResponse
 from scrapy import Request
 from boxil_crawler.parser.parse_service_review import parse_service_review
 import re
+from boxil_crawler.schema.company import Company
+
 
 DATA_TABLE = {
     "導入形態": "service_deployment_type",
@@ -131,6 +133,17 @@ def parse_service_detail(
             data.service_company_large_industry = data.service_company_industry.split("/")[0]
             data.service_company_medium_industry = None
             data.service_company_small_industry = None
+    
+    company = Company(
+        company_id = data.service_company_name,
+        company_name = data.service_company_name,
+        company_industry = data.service_company_industry,
+        company_large_industry = data.service_company_large_industry,
+        company_medium_industry = data.service_company_medium_industry,
+        company_small_industry = data.service_company_small_industry,
+        company_address = data.service_company_address,
+    )
+    
          
     data_table = response.xpath('//*[contains(@class, "SpecificationParent_table")]/tbody')
     
@@ -151,6 +164,8 @@ def parse_service_detail(
                 if not value_false and not value_true:
                     value = None
     
+    yield DataEvent("company", company)
+    
     yield CrawlEvent(
         request = Request(f"https://boxil.jp/service/{data.service_id}/reviews"),
         metadata= {
@@ -159,8 +174,4 @@ def parse_service_detail(
         callback = parse_service_rating,
     )
     
-    yield CrawlEvent(
-        request = Request(f"https://boxil.jp/service/{data.service_id}/reviews"),
-        metadata= None,
-        callback = parse_service_review,
-    )
+    

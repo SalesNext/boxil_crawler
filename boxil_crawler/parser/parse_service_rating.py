@@ -58,7 +58,13 @@ def parse_service_rating(
                 data.service_adequacy_rating = str(chart.get("adequacy") or "")
                
     yield DataEvent("service", data)
-   
+    
+    
+    yield CrawlEvent(
+        request = Request(response.url),
+        metadata= None,
+        callback = parse_service_review,
+    )
     
    
                     
