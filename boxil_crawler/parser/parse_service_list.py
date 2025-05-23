@@ -23,12 +23,14 @@ def parse_service_list(
     service = list(set(service))
     review = list(set(review))
     next_page = response.xpath("//a[@class='Pagination_control__ChC_H']/@href").get()
+    
     if next_page:
-        yield CrawlEvent(
-            request=Request(f"{response.url}/{next_page}"),
-            metadata=None,
-            callback=parse_service_list,
-        )
+        for page in next_page:
+            yield CrawlEvent(
+                request=Request(f"{response.url}/{page}"),
+                metadata=None,
+                callback=parse_service_list,
+            )
     for url in service:
         yield CrawlEvent(
             request=Request(urljoin(response.url, url)),
