@@ -6,6 +6,7 @@ class Service(BaseModel):
     service_id: Optional[str] = None
     service_name: Optional[str] = None
     service_company_name: Optional[str] = None
+    service_company_id : Optional[str] = None
     source_service_url: Optional[str] = None 
     service_category_id : Optional[str] = None
     service_deployment_type: Optional[str] = None

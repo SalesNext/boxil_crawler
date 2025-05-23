@@ -11,7 +11,7 @@ from scrapy import Request
 from boxil_crawler.parser.parse_service_review import parse_service_review
 import re
 from boxil_crawler.schema.company import Company
-
+import uuid
 
 DATA_TABLE = {
     "導入形態": "service_deployment_type",
@@ -117,7 +117,8 @@ def parse_service_detail(
     data.service_company_name = response.xpath("//*[contains(@class, 'Organization_name')]/text()").get()
     data.service_company_industry = response.xpath("//*[contains(@class, 'Organization_caption')][1]/text()").get()
     data.service_company_address = "".join(response.xpath("//*[contains(@class, 'Organization_caption')][2]/text()").getall())
-    
+    data.service_company_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, data.service_company_name))
+
     if data.service_company_industry:
         service_company_industry = data.service_company_industry.split("/")
 
@@ -135,7 +136,7 @@ def parse_service_detail(
             data.service_company_small_industry = None
     
     company = Company(
-        company_id = data.service_company_name,
+        company_id = data.service_company_id,
         company_name = data.service_company_name,
         company_industry = data.service_company_industry,
         company_large_industry = data.service_company_large_industry,
@@ -163,8 +164,8 @@ def parse_service_detail(
                     setattr(data, DATA_TABLE[label], value)
                 if not value_false and not value_true:
                     value = None
-    
-    yield DataEvent("company", company)
+    if company.company_id:
+        yield DataEvent("company", company)
     
     yield CrawlEvent(
         request = Request(f"https://boxil.jp/service/{data.service_id}/reviews"),

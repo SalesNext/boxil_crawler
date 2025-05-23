@@ -10,4 +10,5 @@ class Company(BaseModel):
     company_medium_industry: Optional[str] = None
     company_small_industry: Optional[str] = None
     company_address: Optional[str] = None
+    company: Optional[str] = None
     

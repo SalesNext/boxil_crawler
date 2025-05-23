@@ -45,7 +45,7 @@ type = 'pyarrow'
 format = 'parquet'
 filesystem = 'local'
 key = 'company'
-path = 'data/{crawler_id}/review/{chunk}.parquet'
+path = 'data/{crawler_id}/company/{chunk}.parquet'
 chunk_size = 1000
 
 [readers]
