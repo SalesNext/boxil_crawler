@@ -117,7 +117,7 @@ def parse_service_detail(
     data.service_company_name = response.xpath("//*[contains(@class, 'Organization_name')]/text()").get()
     data.service_company_industry = response.xpath("//*[contains(@class, 'Organization_caption')][1]/text()").get()
     data.service_company_address = "".join(response.xpath("//*[contains(@class, 'Organization_caption')][2]/text()").getall())
-    data.service_company_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, data.service_company_name))
+    data.service_company_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(data.service_company_name)))
 
     if data.service_company_industry:
         service_company_industry = data.service_company_industry.split("/")
@@ -152,6 +152,8 @@ def parse_service_detail(
         for label in DATA_TABLE:
             if label == "導入形態" or label == "導入形態" or label == "ISO" or label == "そのほかセキュリティ認証" or label == "評価点数の設定" or label == "勤怠データのエクスポート方法" or label == "SOC":
                 value = line.xpath(f'.//tr[th[contains(text(), "{label}")]]/td//text()').get()
+                if value =="評価段階や表記の制限なし":
+                    value = False
                 setattr(data, DATA_TABLE[label], value)
             else:   
                 value_false =  response.xpath(f'.//tr[th[contains(text(), "{label}")]]//div[contains(@class, "EmptyValue")]') or response.xpath(f'.//tr[th[contains(text(), "{label}")]]//div[contains(@class, "Bool_icon")]/svg[contains(@class, "Bool_disabled")]')
@@ -162,10 +164,13 @@ def parse_service_detail(
                 if  value_true:
                     value = True
                     setattr(data, DATA_TABLE[label], value)
+                if value == "評価段階や表記の制限なし":
+                    value = False
+                    setattr(data, DATA_TABLE[label], value)
                 if not value_false and not value_true:
                     value = None
-    if company.company_id:
-        yield DataEvent("company", company)
+   
+    yield DataEvent("company", company)
     
     yield CrawlEvent(
         request = Request(f"https://boxil.jp/service/{data.service_id}/reviews"),
