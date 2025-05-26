@@ -23,17 +23,29 @@ class BoxilCrawler(ScrapyCrawler):
         
     def start(self) -> Iterable[Event]:
         
+        crawled_service_ids = []
+        crawled_company_ids = []
+        if self.daily:
+            crawled_service_table : pa.Table = self.readers["service"].read()
+            crawled_service_ids = crawled_service_table.select(["service_id"]).drop_null().to_pydict()["service_id"]
+            crawled_service_ids = list(crawled_service_ids)
+            
+            crawled_company_table : pa.Table = self.readers["company"].read()
+            crawled_company_ids = crawled_company_table.select(["company_id"]).drop_null().to_pydict()["company_id"]
+            crawled_company_ids = list(crawled_company_ids) 
+       
+        
         for crawl_type in self.crawl_type:
             if crawl_type == CrawlType.CATEGORY:
                 url = "https://boxil.jp/categories/?via=si-categoryList-popularCategory"
                 yield CrawlEvent(
                     request = Request(url),
-                    metadata= None,
+                    metadata= {"crawled_company_ids": crawled_company_ids, "crawled_service_ids": crawled_service_ids},
                     callback = parse_service_category
                 )
             elif crawl_type == CrawlType.SITEMAP:
                 yield SitemapEvent(
                     url = "https://boxil.jp/sitemap.xml",
-                    metadata = None,
+                    metadata = {"crawled_company_ids": crawled_company_ids, "crawled_service_ids": crawled_service_ids},
                     callback = parse_sitemap
                 )

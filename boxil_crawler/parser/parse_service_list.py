@@ -28,13 +28,16 @@ def parse_service_list(
         for page in next_page:
             yield CrawlEvent(
                 request=Request(f"{response.url}/{page}"),
-                metadata=None,
+                metadata=event.metadata,
                 callback=parse_service_list,
             )
     for url in service:
+        service_id = url.split("/")[-2]
+        if service_id in event.metadata["crawled_service_ids"]:
+            continue
         yield CrawlEvent(
             request=Request(urljoin(response.url, url)),
-            metadata=None,
+            metadata=event.metadata["crawled_company_ids"],
             callback=parse_service_detail,
         )
     

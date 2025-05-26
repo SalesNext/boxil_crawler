@@ -21,7 +21,7 @@ def parse_service_category(
         url = f'https://boxil.jp{category}'
         yield CrawlEvent(
             request=Request(url),
-            metadata=None,
+            metadata=event.metadata,
             callback=parse_service_list,
         )
     
